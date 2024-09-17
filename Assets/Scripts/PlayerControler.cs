@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using UnityEngine.SceneManagement;
 public class PlayerControler : MonoBehaviour
 {
     private Rigidbody rb;
@@ -32,7 +32,6 @@ public class PlayerControler : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
-
     private void FixedUpdate()
     {
         Vector3 movement = new Vector3(moveInput.x, 0, moveInput.y) * speed * Time.deltaTime;
@@ -45,6 +44,14 @@ public class PlayerControler : MonoBehaviour
         {
             isGrounded = true;
         }
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            TakeDamage(10);
+        }
+        if (collision.gameObject.CompareTag("InstaKill"))
+        {
+            SceneManager.LoadScene("Derrota");
+        }
     }
 
     private void OnCollisionExit(Collision collision)
@@ -53,13 +60,16 @@ public class PlayerControler : MonoBehaviour
         {
             isGrounded = false;
         }
+
     }
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+        Debug.Log(currentHealth);
         if (currentHealth <= 0)
         {
+            SceneManager.LoadScene("Derrota");
             Debug.Log("El personaje ha muerto.");
         }
     }
