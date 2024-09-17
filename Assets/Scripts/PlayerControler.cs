@@ -52,6 +52,10 @@ public class PlayerControler : MonoBehaviour
         {
             SceneManager.LoadScene("Derrota");
         }
+        if (collision.gameObject.CompareTag("Win"))
+        {
+            SceneManager.LoadScene("Victoria");
+        }
     }
 
     private void OnCollisionExit(Collision collision)
