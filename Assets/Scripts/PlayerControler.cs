@@ -8,20 +8,26 @@ public class PlayerControler : MonoBehaviour
     public float speed = 5f;
     public float jumpForce = 7f;
     private bool isGrounded;
+    public float maxHealth = 100f;
+    private float currentHealth;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
-
-    private void OnMove(InputValue value)
+    private void Start()
     {
-        moveInput = value.Get<Vector2>();
+        currentHealth = maxHealth;
     }
 
-    private void OnJump()
+    public void OnMove(InputAction.CallbackContext context)
     {
-        if (isGrounded)
+        moveInput = context.ReadValue<Vector2>();
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (isGrounded && context.performed)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
@@ -46,6 +52,15 @@ public class PlayerControler : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = false;
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            Debug.Log("El personaje ha muerto.");
         }
     }
 }
